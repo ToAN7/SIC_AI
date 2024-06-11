@@ -51,6 +51,7 @@ if __name__ == '__main__':
     tokenized_lists = preprocess(lists)
     print(tokenized_lists)
     print("========================================================")
+    
     vocabs = get_vocab(tokenized_lists)
     print(len(vocabs))
     print(vocabs) 
@@ -58,4 +59,8 @@ if __name__ == '__main__':
 
     vec = [create_vector(line, vocabs) for line in tokenized_lists]
     print(vec)
+    print("========================================================")
+    
+    for i in range(len(tokenized_lists)):
+        print(cosine_similarity(vec[0],vec[i]))
     print("========================================================")
