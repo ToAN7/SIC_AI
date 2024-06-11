@@ -47,11 +47,34 @@ def cosine_similarity(x_vector, y_vector):
     norm_vec2 = np.linalg.norm(y_vector)
     return dot_product/(norm_vec1*norm_vec2)
 
-## Pandas index
-
 ### document frequency (df) - the number of documents that appear the word
 ### inverse document frequency (idf): idf = log(n/df) (base 10)
-### penalty - the stick for AI which use if*tdf
+### penalty - the reward for AI which use if*tdf
+# import os, os.path
+import math
+
+def idf_cal(tokenized_docs, vocabs):
+    # docs = os.listdir("Test Data\SIC_AI_3")
+    # for doc in docs:
+    #     with open("Test Data\SIC_AI_3" + doc) as d: # read each file to search for the word
+    #         for line in d:
+    #         line = line.replace("\n","")
+    #         line.strip()
+    #         lists.append(line)
+    #     d.close()
+    n = len(lists)
+    idf = {}
+    for word in vocabs:
+        df = sum([1 for doc in tokenized_docs if word in doc])
+        idf[word] = math.log(n/df)
+    return idf
+
+def idf_vector(one_doc, idf, vocabs):
+    vector = np.zeros(len(vocabs))
+    for idx, word in enumerate(vocabs):
+        if word in one_doc:
+            vector[idx] = idf[word]
+    return vector
 
 # Act like main in C++
 if __name__ == '__main__':
@@ -70,4 +93,12 @@ if __name__ == '__main__':
     
     for i in range(len(tokenized_lists)):
         print(cosine_similarity(vec[0],vec[i]))
+    print("========================================================")
+
+    idf = idf_cal(tokenized_lists,vocabs)
+    vec1 = [create_vector(line, vocabs) * idf_vector(line,idf,vocabs) for line in tokenized_lists]
+    print(vec1)
+
+    for i in range(len(tokenized_lists)):
+        print(cosine_similarity(vec1[1],vec1[i]))
     print("========================================================")
