@@ -36,15 +36,22 @@ def create_vector(one_line, vocabs):
     word_count = Counter(one_line)
     return np.array([word_count[w] for w in vocabs])
 
-# Heuristic
+# Heuristic - way people find out when will one word in document become important
 
-# Find similarity by measuring the angle of 2 vector
+## Use term frequency to find similarity by measuring the angle of 2 vector
+### term frequency (tf) - the important of a word that appear in one document
 
 def cosine_similarity(x_vector, y_vector):
     dot_product = np.dot(x_vector,y_vector)
     norm_vec1 = np.linalg.norm(x_vector)
     norm_vec2 = np.linalg.norm(y_vector)
     return dot_product/(norm_vec1*norm_vec2)
+
+## Pandas index
+
+### document frequency (df) - the number of documents that appear the word
+### inverse document frequency (idf): idf = log(n/df) (base 10)
+### penalty - the stick for AI which use if*tdf
 
 # Act like main in C++
 if __name__ == '__main__':
