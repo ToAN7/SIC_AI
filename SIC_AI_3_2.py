@@ -100,5 +100,13 @@ if __name__ == '__main__':
     print(vec1)
 
     for i in range(len(tokenized_lists)):
-        print(cosine_similarity(vec1[1],vec1[i]))
+        print(cosine_similarity(vec1[0],vec1[i]))
+    print("========================================================")
+
+    # K - nearest neighbor
+    from sklearn.cluster import KMeans
+    kmeans = KMeans(n_clusters=2, random_state=0).fit(vec1)
+    #import pdb # debug
+    #pdb.set_trace()
+    print(kmeans.__dict__)
     print("========================================================")
