@@ -5,3 +5,5 @@
 4. Số file được tạo ra trong buổi học
 # Về video có trong buổi học:
 https://www.youtube.com/playlist?list=PLdLdajKprVM_QgwexWpbIvQgTyhwXR3eI
+# Mục tiêu trong repository:
+Nguyễn Bá TânTân
