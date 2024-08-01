@@ -25,6 +25,7 @@ for i in lt:
 # print(df_t.head(10))
 # print("Cuoi")
 # print(df_t.tail(30))
+df_t.reset_index(drop=True, inplace=True)
 #Sau khi tách Date chứa "{}"
 print(df_t.shape)
 lt_content = []
