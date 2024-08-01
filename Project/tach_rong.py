@@ -21,8 +21,7 @@ for txt in df_t['Date']:
         numb+=1
         break
 
-for i in lt:
-    df_t = df_t.drop(i)
+df_t = df_t.drop(lt)
 # print("Dau")
 # print(df_t.head(10))
 # print("Cuoi")
@@ -33,16 +32,15 @@ print(df_t.shape)
 lt_content = []
 for idx,txt in enumerate(df_t['Content']):
     try:
-        if len(txt) < 100:
-            print(1)
-    except:
+        if txt.__contains__("Content"):
+            lt_content.append(idx)
+    except:# Xử lý trường hợp txt kiểu float
         lt_content.append(idx)
         pass
-    else:
+    else:# bỏ qua tất cả
         pass
 print(lt_content)
-for i in lt_content:
-    df_t = df_t.drop(i)
+df_t = df_t.drop(lt_content)
 #Sau khi tách Content chứa "nan"
 df_t.reset_index(drop=True, inplace=True)
 print(df_t.shape)
