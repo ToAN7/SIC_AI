@@ -42,7 +42,9 @@ for idx,txt in enumerate(df_t['Content']):
 print(lt_content)
 df_t = df_t.drop(lt_content)
 #Sau khi tách Content chứa "nan"
+
 df_t.reset_index(drop=True, inplace=True)
 print(df_t.shape)
 print(df_t[0:40])
 print(df_t[40:92])
+
