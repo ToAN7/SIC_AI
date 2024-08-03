@@ -16,7 +16,7 @@ def wordopt(text):
     text = np.array(['Date', 'Content', 'Source'],np.string_)
     return text
 
-def clean(filename, outputname):
+def clean_data(filename, outputname):
     raw_data = pd.read_csv(filename, delimiter="|").astype(str)
     raw_data['Content'] = raw_data["Content"].apply(wordopt)
 
