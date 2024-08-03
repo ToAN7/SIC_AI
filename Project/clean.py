@@ -4,18 +4,21 @@ import re
 import string
 import csv
 
+def wordopt(text):
+    text = text.lower()
+    text = re.sub('\[.*?\]','',text)
+    text = re.sub("\\W"," ",text)
+    text = re.sub('https?://\S+|www\.\S+','',text)
+    text = re.sub('<.*?>+',b'',text)
+    text = re.sub('[%s]' % re.escape(string.punctuation),'',text)
+    text = re.sub('\w*\d\w*','',text)
+    text = re.sub(' +', ' ',text)
+    text = np.array(['Date', 'Content', 'Source'],np.string_)
+    return text
+
 def clean(filename, outputname):
     raw_data = pd.read_csv(filename, delimiter="|").astype(str)
-
-    raw_data['Content'] = raw_data['Content'].lower()
-    raw_data['Content'] = re.sub('\[.*?\]','',raw_data['Content'])
-    raw_data['Content'] = re.sub("\\W"," ",raw_data['Content'])
-    raw_data['Content'] = re.sub('https?://\S+|www\.\S+','',raw_data['Content'])
-    raw_data['Content'] = re.sub('<.*?>+',b'',raw_data['Content'])
-    raw_data['Content'] = re.sub('[%s]' % re.escape(string.punctuation),'',raw_data['Content'])
-    raw_data['Content'] = re.sub('\w*\d\w*','',raw_data['Content'])
-    raw_data['Content'] = re.sub(' +', ' ',raw_data['Content'])
-    raw_data['Content'] = np.array(['Date', 'Content', 'Source'],np.string_)
+    raw_data['Content'] = raw_data["Content"].apply(wordopt)
 
     for x in range(len(raw_data)):
         if raw_data['Content'][x] != 'nan' and raw_data['Date'][x] != '{}':
