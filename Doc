@@ -1,0 +1,57 @@
+!Nhận dạng tin giả
+  Data đầu vào: embeddings (8943,768) (Không nhãn/tất cả đều là tin thật)
+  Thử nghiệm với một vài bài toán về phân loại, gom cụm
+  Mắc kẹt: Không biết cách nào để cải thiện, không biết nên triển khai thuật toán nào!
+  !! Tiền xử lý dữ liệu
+      text = text.lower()
+      text = re.sub('\[.*?\]','',text)
+      text = re.sub("\\W"," ",text)
+      text = re.sub('https?://\S+|www\.\S+','',text)
+      text = re.sub('<.*?>+',b'',text)
+      text = re.sub('[%s]' % re.escape(string.punctuation),'',text)
+      text = re.sub('\w*\d\w*','',text)
+      text = re.sub(' +', ' ',text)
+  !! Xoá các stop_words
+      vietnamese_stop_words = [
+              'là', 'và', 'có', 'trên', 'cho', 'một', 'các', 'được', 'như', 'với', 
+              'của', 'ở', 'khi', 'đã', 'còn', 'thì', 'này', 'bởi', 'đó', 'để', 'năm', 
+              'ngày', 'vào', 'sau', 'tại', 'trong', 'rằng', 'đến', 'từ'
+              ]
+  !!>> Đã thử word-tokenzie để làm gom các dữ liệu gần gũi với nhau vào nhằm tăng tính ngữ nghĩa (nhưng bị lỗi)
+  !!>> Bigram một phương pháp tách từ đôi (chưa thử)
+!Phương pháp: Xác định outlier
+  !! Kmeans:
+      1/ Ta tính khoảng cách (dmin) của mỗi điểm dữ liệu tới các centroids (tâm), #kết quả là mảng 2D
+      2/ Tính khoảng cách nhỏ nhất (dmin) của mỗi điểm dữ liệu tới các centroids # kết quả là mảng 1D
+      3/ Chọn khoảng cách lớn nhất trong dmin (dmin.max()) và đây là threshold (ngưỡng) mà ta quan tâm
+      Kết quả: dựa vào ngưỡng đó ta sẽ xác định các outlier
+  !! OneClassSVM:
+      1/ Ta đưa dữ liệu vào mô hình (nu =0.1, gamma='scale', kernel='___')
+        //gamma ta chọn scale là để cho mô hình tự động chọn thông số thích hợp dựa trên độ phân tán
+        và số lượng của mỗi điểm dữ liệu
+        // kernel ta có linear (dành cho dữ liệu tuyến tính), rbf (phi tuyến tính), poly và sigmoid
+      2/ Sau đó ta dùng phương thức .predict(data_test) để dự đoán
+        # 1 là inlier, -1 là outlier.
+  !! Tính toán hiệu suất
+    trong sklearn ta chọn thuộc tính model_selection và import cross_val_score, KFold
+        # KFlod là kỹ thuật phân chia dữ liệu
+        # cross-validation để đánh giá hiệu suất mô hình
+  !! Sử dụng Kmeans để đánh nhãn và dùng chúng cho SVM : #kết quả không ổn, không thể dự đoán được tin giả hay thật, 
+!Kích thước của 1 vector embeddings
+Word2Vec:
+  Kích thước phổ biến: 100, 200, hoặc 300 chiều.
+GloVe:
+  Kích thước phổ biến: 50, 100, 200, hoặc 300 chiều.
+FastText:
+  Kích thước phổ biến: 100, 300 chiều.
+BERT và các biến thể của nó (như BERT, RoBERTa, PhoBERT, v.v.):
+  BERT base: 768 chiều.
+  BERT large: 1024 chiều.
+  PhoBERT base: 768 chiều.
+  PhoBERT large: 1024 chiều.
+Sentence Transformers:
+  Kích thước của embedding phụ thuộc vào mô hình transformer cụ thể được sử dụng. Ví dụ, nếu sử dụng BERT base thì embedding sẽ có kích thước 768 chiều.
+
+! Kmeans: lưu ý vài vector embeddings sẽ trả về datatype dạng float64, nhưng Kmeans chỉ chấp nhận float32 cho nên ta phải ép kiểu
+! OneClassSVM: Dữ liệu khi cho học với kernel là linear, rbf thì sẽ trả về độ chính xác khá cao, nhưng vẫn có vấn đề khi thử nghiệm với dữ liệu giả
+! SVR: Điểm yếu~Không có nhãn, không nhận dạng được
