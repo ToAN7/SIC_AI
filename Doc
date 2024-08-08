@@ -1,5 +1,6 @@
 !Nhận dạng tin giả
   Data đầu vào: embeddings (8943,768) (Không nhãn/tất cả đều là tin thật)
+  Data đầu vào2: tin giả ( <= 200 ) (tất cả đều là tin giả với ~ 50% tin gốc được chỉnh sửa bởi AI, 50% là tin được lấy từ trang có khả năng là tin giả cao và chỉnh sửa để thành tin giả
   Thử nghiệm với một vài bài toán về phân loại, gom cụm
   Mắc kẹt: Không biết cách nào để cải thiện, không biết nên triển khai thuật toán nào!
   !! Tiền xử lý dữ liệu
@@ -19,7 +20,7 @@
               ]
   !!>> Đã thử word-tokenzie để làm gom các dữ liệu gần gũi với nhau vào nhằm tăng tính ngữ nghĩa (nhưng bị lỗi)
   !!>> Bigram một phương pháp tách từ đôi (chưa thử)
-!Phương pháp: Xác định outlier
+!Phương pháp: Xác định fake_news
   !! Kmeans:
       1/ Ta tính khoảng cách (dmin) của mỗi điểm dữ liệu tới các centroids (tâm), #kết quả là mảng 2D
       2/ Tính khoảng cách nhỏ nhất (dmin) của mỗi điểm dữ liệu tới các centroids # kết quả là mảng 1D
@@ -36,7 +37,11 @@
     trong sklearn ta chọn thuộc tính model_selection và import cross_val_score, KFold
         # KFlod là kỹ thuật phân chia dữ liệu
         # cross-validation để đánh giá hiệu suất mô hình
-  !! Sử dụng Kmeans để đánh nhãn và dùng chúng cho SVM : #kết quả không ổn, không thể dự đoán được tin giả hay thật, 
+  !! Sử dụng Kmeans để đánh nhãn và dùng chúng cho SVM : #kết quả không ổn, không thể dự đoán được tin giả hay thật vì số nhãn có sẵn ta không thể biết được cái nào là tin giả
+  !! Xác định tin giả dựa trên độ tương đồng
+      # Với ý tưởng là toàn bộ dữ liệu hiện có là tin chính xác, ta có thể dùng nó làm thước đo để phán đoán tin giả
+      dựa trên độ tương đồng (cosine, euclid, ...) với những tin có độ tương đồng trên 50% thì có khả năng đó không phải
+      là tin giả, và ngược lại.
 !Kích thước của 1 vector embeddings
 Word2Vec:
   Kích thước phổ biến: 100, 200, hoặc 300 chiều.
@@ -52,6 +57,7 @@ BERT và các biến thể của nó (như BERT, RoBERTa, PhoBERT, v.v.):
 Sentence Transformers:
   Kích thước của embedding phụ thuộc vào mô hình transformer cụ thể được sử dụng. Ví dụ, nếu sử dụng BERT base thì embedding sẽ có kích thước 768 chiều.
 
-! Kmeans: lưu ý vài vector embeddings sẽ trả về datatype dạng float64, nhưng Kmeans chỉ chấp nhận float32 cho nên ta phải ép kiểu
-! OneClassSVM: Dữ liệu khi cho học với kernel là linear, rbf thì sẽ trả về độ chính xác khá cao, nhưng vẫn có vấn đề khi thử nghiệm với dữ liệu giả
-! SVR: Điểm yếu~Không có nhãn, không nhận dạng được
+! Kmeans: lưu ý vài vector embeddings sẽ trả về datatype dạng float64, nhưng Kmeans chỉ chấp nhận float32 cho nên ta phải ép kiểu.
+! OneClassSVM: Dữ liệu khi cho học với kernel là linear, rbf thì sẽ trả về độ chính xác khá cao, nhưng vẫn có vấn đề khi thử nghiệm với dữ liệu giả.
+! SVR: Điểm yếu~Không có nhãn, không nhận dạng được.
+! Xét độ tương đồng: hợp lý với ý tưởng bộ dữ liệu là tin thật.
