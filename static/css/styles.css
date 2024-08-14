@@ -1,0 +1,66 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#header {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#body {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center;     /* Căn giữa theo chiều dọc */
+    padding: 10px;
+    background-color: #f1f1f1;
+    flex-grow: 1;            /* Để body chiếm toàn bộ chiều cao còn lại */
+}
+
+#form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+#label {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#input {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+#btn-predict {
+    padding: 10px;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 40px 0 40px 0;
+}
+
+#btn-predict:hover {
+    background-color: #45a049;
+}
+
+#chossen {
+    margin: 40px 0 40px 0;
+    font-size: 20px;
+}
+
+#footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #f1f1f1;
+}

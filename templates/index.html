@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake News Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('form').addEventListener('submit', function(event) {
+                event.preventDefault();  // Prevent default form submission
+
+                const formData = {
+                    news_text: document.querySelector('textarea[name="news_text"]').value,
+                    model: document.querySelector('select[name="model"]').value
+                };
+
+                console.log(formData);
+
+                const myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+                const raw = JSON.stringify({
+                    model: formData.model,
+                    text: formData.news_text
+                });
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow"
+                };
+
+                fetch("/predict", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            alert('Error: ' + result.error);
+                        } else {
+                            alert('Prediction using ' + result.model + ': ' + result.prediction);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</head>
+<body>
+    <header id="header">
+        <h1>Fake News Detection</h1>
+    </header>
+    <div id="body">
+        <form method="POST">
+            <div>
+                <label id="label" for="news_text" class="form-label">Enter content: </label>
+                <textarea name="news_text" rows="5" cols="50" placeholder="Enter news content"></textarea>
+            </div>
+            <div>
+                <label for="model">Choose a model:</label>
+                <select name="model" id="model">
+                    <option value="svm">SVM</option>
+                    <option value="knn">KNN</option>
+                </select>
+            </div>
+            <button id="btn-predict" type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+</html>
